@@ -10,16 +10,11 @@ import {connectDB} from './config/db.config.js'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 
+
 connectDB()
 
-import User from "./models/User.model.js";
-import userRepository from "./repositories/users.repository.js";
-import Workspace from "./models/Workspace.model.js";
-import WorkspaceMember from "./models/WorkspaceMembers.model.js";
-import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "./dictionaries/availableRoles.dictionary.js";
-import workspaces_repository from "./repositories/workspace.repository.js";
-
 import express from 'express'
+import authorizationMiddleware from "./middleware/auth.middleware.js";   
 import usersRouter from "./routes/users.router.js";
 import productsRouter from "./routes/products.router.js";
 import workspaceRouter from "./routes/workspace.router.js";
@@ -45,18 +40,15 @@ app.get('/', (request, response) => {
 app.get('/ping', (request, response) => {
     response.send('<h1>Server is running</h1>')
 })
-const decirHolaMiddleware = (request, ressponse, next) => {
-    console.log('hola')
-    next()
-}
 
-
-app.get('/test-tonto', authorizationMiddleware, (resquest, response ) => {
+app.get('/test-tonto', 
+    authorizationMiddleware, 
+    ( request, response ) => {
     response.send('Hola')
 })
 app.get('/private-info', 
     authorizationMiddleware, 
-    (request, response) => {
+    ( request, response ) => {
         try {
             response.send('Clave super important que solo un USUARIO DEBE ACEDER')
         }
@@ -84,7 +76,7 @@ app.post(
         response.send('Workspace creado')
     }
 )
-//Middleware
+// Middleware
 // Que es middlewawre? Si lo hemos usado antes, por ejemplo cuando app.use(express.json())
 // Entre la consulta y la respuesta quiero checkea si la consulta es de tipo json yde asi guardar en el body el json de la consulta
 // Entre la consulta y la respuesta quiero hacer un hola mundo por consola

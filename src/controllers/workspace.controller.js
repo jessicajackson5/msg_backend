@@ -1,4 +1,4 @@
-import workspaces_repository from "../repositories/workspace.repository"
+import workspaces_repository from "../repositories/workspace.repository.js"
 
 class WorkspaceController {
     async create(request, response){
@@ -34,5 +34,5 @@ class WorkspaceController {
     }
 }
 
-const workspace_controller = new workspace_controller
+const workspace_controller = new WorkspaceController
 export default workspace_controller
