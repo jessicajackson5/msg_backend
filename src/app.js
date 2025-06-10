@@ -72,7 +72,7 @@ app.post(
         // quien esta creando el workspace
         // quien va a ser el dueño
         console.log(request.user)
-        response.send('quien quiere crear el workspace es: ' + request.user.id)
+        response.send('Quien quiere crear el workspace es: ' + request.user.id)
         response.send('Workspace creado')
     }
 )
@@ -92,7 +92,7 @@ app.use('/api/workspace', workspaceRouter)
 // Obtener la lista de workspaces de un usuario
 //  GET '/api/workspaces'
 // Eliminar un workspace por id (SOLO VALIDO SI EL USUARIO QUE ACE LA CONSULTA ES EL DUENO DEL WORKSPACE)
-// DELET '/api/workspaces/:workspace_id'
+// DELETE '/api/workspaces/:workspace_id'
 app.listen(ENVIRONMENT.PORT, ()=> {
     /*Cuando el servidor se escucha en el puerto 3000 de mi pc se ejecutara esta funcion */
     console.log(`La applicacion se esta escuchando en http://localhost:${ENVIRONMENT.PORT}`)

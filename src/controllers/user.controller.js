@@ -122,7 +122,7 @@ class UserController {
             const {email, password} = request.body
 
             if(!email){
-                throw {status: 400, message: 'no hay email!'}
+                throw {status: 400, message: 'No hay email!'}
             }
             if(!password){
                 throw {status: 400, message: 'no hay password!'}
