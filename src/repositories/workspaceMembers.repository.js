@@ -6,6 +6,34 @@ const elevatedRoles = [
     AVAILABLE_ROLES_WORKSPACE_MEMBERS.CO_ADMIN
 ]
 class WorkspaceMembersRepository {
+    async create({workspace_id, user_id, role}){
+        const workspace_member = new WorkspaceMembers({
+            workspace_id,
+            user_id,
+            role
+        })
+        await workspace_member.save()
+    }
+    async getAllbyWorkspaceID(workspace_id){
+        return await WorkspaceMembers.find({workspace_id:workspace_id})
+    }
+
+    async getAllByUserId (user_id){
+        const workspaces_list = await WorkspaceMember
+        .find({user_id: user_id})
+        .populate('workspace_id', 'name') //Expandirme los datos referenciados de la propiedad workspace_id
+        //Populate solo sirve si la propiedad que intentamos expandir tiene una referencia a otra coleccion existente
+        const workspaces_list_formatted = workspaces_list.map((workspace_member) => {
+            return {
+                _id: workspace_member._id,
+                user: workspace_member.user_id,
+                workspace: workspace_member.workspace_id,
+                role: workspace_member.role
+            }
+        })
+        return workspaces_list_formatted
+    }
+/*
     async findByWorkspaceId({workspace_id}) {
         return await WorkspaceMembers.find({ workspace_id }).populate('user_id')
     }
@@ -35,6 +63,7 @@ class WorkspaceMembersRepository {
     // new returns object (by default false). runValidators checks role against scheme/enum
     }
 }
-
+*/
+}
 const workspaceMembersRepository = new WorkspaceMembersRepository()
 export default workspaceMembersRepository

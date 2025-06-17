@@ -1,3 +1,4 @@
+import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js"
 import workspaces_repository from "../repositories/workspace.repository.js"
 import WorkspaceMembers from "../repositories/workspaceMembers.repository.js"
 
@@ -6,15 +7,14 @@ class WorkspaceController {
         try{
             const {name, description} = request.body
             const {id} = request.user  // This is the id of the user that made the request from auth middleware
-            
-            if(!id){
-                throw {status: 400, message: 'Usuario no encontrado!'}
-            }
-            if (!name) {
-                throw {status: 400, message: 'Nombre de Workspace requerido'}
-            }
-            await workspaces_repository.create({name, id, description}) // Added id here (?)
-            response.status(201).send(
+            const workspace_created = await workspaces_repository.create({name, description, owner_id: id})
+            await members_workspace_repository.create({
+                workspace_id: workspace_created.id,
+                user_id: id,
+                role: AVAILABLE_ROLES_WORKSPACE_MEMBERS.ADMIN
+            })
+    
+            response.status(201).json(
                 {
                     message: "Workspace created successfully",
                     status: 201,
@@ -41,7 +41,9 @@ class WorkspaceController {
             }
         }
     }
-    async getWorkspaces(request, response){
+    // GET ALL WORKSPACES: Get the list of workspace that the user belongs to
+    // User can be the owner, co-owner or member
+    async getAll(request, response){
         try{
             const {name, description} = request.body
             const {id} = request.user  // This is the id of the user that made the request
@@ -73,7 +75,7 @@ class WorkspaceController {
         }
     }
     async getWorkspaceMembers(request, response){}
-    async deleteWorkspace(request, response){
+    async delete(request, response){
         const { workspace_id } = request.params;
         const {id} = request.user  // This is the id of the user that made the request from auth middleware
 

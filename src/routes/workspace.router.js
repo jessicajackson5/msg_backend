@@ -2,28 +2,28 @@ import express from "express";
 import authorizationMiddleware from "../middleware/auth.middleware.js";   
 import workspace_controller from "../controllers/workspace.controller.js";
 
-const workspaceRouter = express.Router()
+const workspace_router = express.Router()
 
-workspaceRouter.post(
-    '/create', 
+workspace_router.post(
+    '/', 
     authorizationMiddleware,
     workspace_controller.create
 )
-workspaceRouter.get(
-    '/get-workspaces', 
+/*workspaceRouter.get(
+    '/', 
     authorizationMiddleware,
-    workspace_controller.getWorkspaces
+    workspace_controller.getAll
 )
 // Placeholder -- I think I need a workspace ID for the below?
 workspaceRouter.get(
     '/:workspace_id/get-workspace-members', 
     authorizationMiddleware,
     workspace_controller.getWorkspaceMembers
-)
+)*/
 // Delete a workspace
-workspaceRouter.delete(
+workspace_router.delete(
     '/:workspace_id',
     authorizationMiddleware,
-    workspace_controller.deleteWorkspace
+    workspace_controller.delete
 )
-export default workspaceRouter; 
+export default workspace_router; 

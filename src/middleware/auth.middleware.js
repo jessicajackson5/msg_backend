@@ -7,7 +7,7 @@ const authorizationMiddleware = (request, response, next) => {
         const authorization_type = authorization_header.split(' ')[0]
         const authorization_token = authorization_header.split(' ')[1]
         const authorization_token_payload = jwt.verify(authorization_token, ENVIRONMENT.JWT_SECRET_KEY)
-        console.log(authorization_token_payload)
+        request.user = authorization_token_payload
         next()
     }
     catch (error) {
