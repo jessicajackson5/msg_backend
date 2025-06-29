@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "node --watch ./src/app.js",
+    "build": "node ./src/app.js",
     "nodemon-dev": "nodemon ./src/app.js"
   },
   "keywords": [],
