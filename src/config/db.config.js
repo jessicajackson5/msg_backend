@@ -11,11 +11,18 @@ export const connectDB = async () => {
         if (dbUrl.includes('mongodb.net')) {
             await mongoose.connect(dbUrl, {
                 retryWrites: true,
-                w: 'majority'
+                w: 'majority',
+                maxPoolSize: 10,
+                serverSelectionTimeoutMS: 5000,
+                socketTimeoutMS: 45000,
             });
         } else {
             // Local MongoDB connection
-            await mongoose.connect(`${dbUrl}/${dbName}`);
+            await mongoose.connect(`${dbUrl}/${dbName}`, {
+                maxPoolSize: 10,
+                serverSelectionTimeoutMS: 5000,
+                socketTimeoutMS: 45000,
+            });
         }
         
         console.log('Connection exitosa')
