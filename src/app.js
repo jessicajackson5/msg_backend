@@ -18,7 +18,7 @@ const app = express() //Create an express appliation
 // Production optimizations
 app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-frontend-domain.vercel.app'] 
+        ? ['https://msg-frontend-tawny.vercel.app/'] 
         : ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true
 }))
