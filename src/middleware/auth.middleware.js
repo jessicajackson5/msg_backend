@@ -14,7 +14,7 @@ const authorizationMiddleware = (request, response, next) => {
         if (error instanceof jwt.JsonWebTokenError) {
             response.status(401).send({
                 ok: false,
-                message: 'Token invalido',
+                message: 'Token invalid',
                 status: 401
             })
         }
@@ -22,7 +22,7 @@ const authorizationMiddleware = (request, response, next) => {
             response.status(500).send(
                 {
                     ok: false,
-                    message: 'Error interno del servidor',
+                    message: 'Internal server error',
                     status: 500
                 }
             )

@@ -1,32 +1,37 @@
 import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js"
+import members_workspace_repository from "../repositories/workspaceMembers.repository.js"
 import workspaces_repository from "../repositories/workspace.repository.js"
-import WorkspaceMembers from "../repositories/workspaceMembers.repository.js"
+
+//Garbage storage?
+//We do not need to manipulate memory, JS does it for us. 
+//A variable is assigned automatically to memory
+//An unused variable is removed from memory
 
 class WorkspaceController {
     async create(request, response){
         try{
             const {name, description} = request.body
-            const {id} = request.user  // This is the id of the user that made the request from auth middleware
+            const {id} = request.user // ID of the user that made the request
+
             const workspace_created = await workspaces_repository.create({name, description, owner_id: id})
             await members_workspace_repository.create({
-                workspace_id: workspace_created.id,
+                workspace_id: workspace_created._id,
                 user_id: id,
                 role: AVAILABLE_ROLES_WORKSPACE_MEMBERS.ADMIN
             })
-    
             response.status(201).json(
                 {
-                    message: "Workspace created successfully",
+                    ok: true, 
+                    message:'Workspace created successfully',
                     status: 201,
                     data: {}
                 }
             )
-            // TO DO - set the role of the member that created the workspace to be the owner? 
         }
         catch(error){
             
             if(error.status){ 
-                response.status(error.status).send(
+                response.status(error.status).json(
                     {
                         message: error.message, 
                         status: error.status,
@@ -36,54 +41,66 @@ class WorkspaceController {
                 return 
             }
             else{
-                console.log('Hubo un error', error)
-                response.status(500).send({message: 'Error interno del servidor', ok: false})
-            }
-        }
-    }
-    // GET ALL WORKSPACES: Get the list of workspace that the user belongs to
-    // User can be the owner, co-owner or member
-    async getAll(request, response){
-        try{
-            const {name, description} = request.body
-            const {id} = request.user  // This is the id of the user that made the request
-            await workspaces_repository.create({name, description})
-            response.status(201).send(
-                {
-                    message: "Workspace created successfully",
-                    status: 201,
-                    data: {}
-                }
-            )
-        }
-        catch(error){
-            
-            if(error.status){ 
-                response.status(error.status).send(
+                console.log('There was an error', error)
+                response.status(500).json(
                     {
-                        message: error.message, 
-                        status: error.status,
+                        message: 'Internal server error', 
                         ok: false
                     }
                 )
-                return 
-            }
-            else{
-                console.log('Hubo un error', error)
-                response.status(500).send({message: 'Error interno del servidor', ok: false})
             }
         }
     }
-    async getWorkspaceMembers(request, response){}
-    async delete(request, response){
-        const { workspace_id } = request.params;
-        const {id} = request.user  // This is the id of the user that made the request from auth middleware
+    async delete(request, response) {
+        try {
+            const workspace_id = request.params.workspace_id
+            const user_id = request.user.id
+            await workspaces_repository.deleteWorkspaceFromOwner(user_id, workspace_id)
 
-        const hasPermission = await workspaceMembersRepository.hasAdminAccess({ workspace_id, user_id });
-        //hasAdminAccess also checks for membership
-        if (!hasPermission) {
-            throw { status: 403, message: 'No tenés permiso para realizar esta acción' };
-        }
+            response.status(200).json(
+                {
+                    ok: true,
+                    message: 'Workspace eliminated successfully',
+                    status: 200,
+                    data: {}
+                }
+            )
+            return
+        } catch (error) {
+
+            if (error.status) {
+                response.status(error.status).send(
+                    {
+                        message: error.message,
+                        status: error.status,
+                        ok: false
+                    }
+                )
+                return
+            } else {
+                console.error('There was an error', error)
+                response.status(500).json(
+                    {
+                        message: 'Internal server error',
+                        ok: false
+                    }
+                )
+            }
+        };
+    }
+
+    async getAllByMember (request, response){
+        const {id} = request.user
+        //Get a list of all the workspaces a member belongs to
+        const workspaces = await members_workspace_repository.getAllByUserId(id)
+        response.json({
+            ok: true, 
+            status: 200,
+            message:'List of workspaces',
+            data: {
+                workspaces: workspaces
+            }
+        })
     }
 }
 

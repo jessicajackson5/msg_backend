@@ -25,4 +25,4 @@ const channelSchema = new mongoose.Schema(
     }
 )
 const Channel = mongoose.model('channels', channelSchema)
-module.exports = Channel
+export default Channel 

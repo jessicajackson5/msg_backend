@@ -15,11 +15,12 @@ class workspaceMembersController {
                     message: "User not found"
                 }
             }
+            // Ensure the member is not already in the workspace (avoid duplicates)
             const members = await members_workspace_repository.getAllbyWorkspaceID(workspace_id)
             if(members.find(member => member._id ===user_found._id)){
                 throw {
                     status: 400,
-                    message: 'El usuario ya está en el espacio de trabajo'
+                    message: 'The user is already a member of this workspace'
                 }
             }
 
@@ -39,11 +40,10 @@ class workspaceMembersController {
             if(workspace_found.owner_id !== id){
                 throw{
                     status: 403,
-                    message: "You don't havea permission as you are not the owner"
+                    message: "You don't have permission as you are not the owner"
                 }
             }
-            // Check if the member already exists so you don't duplicate
-            const member_exists = await workspaces_repository.getMember(workspace_id,id)
+         
             await members_workspace_repository.create({
                 user_id: id,
                 workspace_id: workspace_id,
@@ -53,7 +53,7 @@ class workspaceMembersController {
                 {
                     ok: true,
                     status: 201,
-                    message: 'Miembr añadido exitosamente',
+                    message: 'Miembro añadido exitosamente',
                     data: {}
                 }
             )
@@ -70,8 +70,8 @@ class workspaceMembersController {
                 return 
             }
             else{
-                console.log('Hubo un error', error)
-                response.status(500).send({message: 'Error interno del servidor', ok: false})
+                console.log('There was an error', error)
+                response.status(500).send({message: 'Internal sever error', ok: false})
             }
         }
     }

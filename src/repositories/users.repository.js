@@ -3,6 +3,7 @@ import User from "../models/User.model.js";
 class UserRepository {
     async create({name, password, email}){
         const user = new User({name, password, email})
+        console.log(user)
         await user.save()
     }
     async getAll(){
@@ -21,7 +22,7 @@ class UserRepository {
         
         if(userFound.verified){
             //throw lo uso para lanzar mi propio error
-            throw { status:400, message:"Usuario ya validado" }
+            throw { status:400, message:"User already verified" }
             
         }
         else{
@@ -34,7 +35,7 @@ class UserRepository {
                 },
                 {
                     runValidators: true,
-                    new: true //Cuando se ejecute el update nos actualice el retorno
+                    new: true // When the update is executed, update the return value.
                 }
             )
             

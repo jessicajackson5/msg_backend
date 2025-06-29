@@ -22,6 +22,9 @@ class WorkspacesRepository {
             throw {status: 404, message: 'El workspace a eliminar no existe'}
         }
     }
+    async deleteById(workspace_id){
+        return await Workspaces.findOneAndDelete({_id: workspace_id})
+    }
     async getById (workspace_id){
         return await Workspaces.findById(workspace_id)
     }
