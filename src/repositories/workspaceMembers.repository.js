@@ -13,11 +13,12 @@ class WorkspaceMembersRepository {
         return await WorkspaceMembers.find({workspace_id:workspace_id})
     }
 
-    async getAllByUserId (user_id){
-        const workspaces_list = await WorkspaceMember
+    async getAllbyUserID (user_id){
+        const workspaces_list = await WorkspaceMembers
         .find({user_id: user_id})
         .populate('workspace_id', 'name') //Expandirme los datos referenciados de la propiedad workspace_id
         //Populate solo sirve si la propiedad que intentamos expandir tiene una referencia a otra coleccion existente
+        
         const workspaces_list_formatted = workspaces_list.map((workspace_member) => {
             return {
                 _id: workspace_member._id,
@@ -29,9 +30,9 @@ class WorkspaceMembersRepository {
         return workspaces_list_formatted
     }
     async getMemberByWorkspaceIdAndUserId (workspace_id, user_id) {
-        return await WorkspaceMember.findOne({workspace_id: workspace_id, user_id: user_id})
+        return await WorkspaceMembers.findOne({workspace_id: workspace_id, user_id: user_id})
     }
 
 }
-const workspaceMembersRepository = new WorkspaceMembersRepository()
-export default workspaceMembersRepository
+const workspace_members_repository = new WorkspaceMembersRepository()
+export default workspace_members_repository

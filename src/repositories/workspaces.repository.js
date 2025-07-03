@@ -22,13 +22,13 @@ class WorkspacesRepository {
             throw {status: 404, message: 'The workspace to eliminate does not exist'}
         }
     }
-    async deleteById(workspace_id){
+    async deleteByID(workspace_id){
         return await Workspaces.findOneAndDelete({_id: workspace_id})
     }
-    async getById (workspace_id){
+    async getByID (workspace_id){
         return await Workspaces.findById(workspace_id)
     }
 }
 
-const workspaces_repository = new WorkspacesRepository();
-export default workspaces_repository;
+const workspaces_repository = new WorkspacesRepository()
+export default workspaces_repository

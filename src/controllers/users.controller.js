@@ -13,63 +13,67 @@ const sendVerificationEmail = async ({ email, name, redirect_url }) => {
             html: `
             <h1>Welcome ${name}</h1>
             <p>
-                To verify your email account, click on the following link or ignore this email.
+                Please click on the following link to verify your account. If you do no recognize this requesty you can ignore this email.
             </p>
-            <a href='${redirect_url}'>Click here to verify</a>
-            <span>You have 7 days to click on the link.</span>
+            <a href='${redirect_url}'>Click here to verify your account</a>
+            <span>You have 7 days to click the link</span>
             `
         }
     )
     console.log('Mail sent:', result)
 }
 
-//Receive request data and emit answers 
+//Receive the data from the client and validates it
 class UserController {
     async register(request, response) {
-        /* Validate that the data arrived */
+
+        /* Validate that all the data arrived */
         if (!request.body || !request.body.name || !request.body.password || !request.body.email) {
             response.status(400).send({
-                message: 'Invalid registration request',
+                message: 'Invalid user registration',
                 ok: false
             })
+
         }
 
-        //Hashear la contraseña
-        const password_hashed = await bcrypt.hash(request.body.password, 12)            
-        
-        // Store user data temporarily instead of creating in DB
+        //Hash the password
+        const password_hashed = await bcrypt.hash(request.body.password, 12)
+
+
+        //Save the user in the DB
         await userRepository.create({
             name: request.body.name,
             password: password_hashed,
             email: request.body.email
         })
-        /* Send a signed token */
+
+        /* Emit a token with signature */
         const verification_token = jwt.sign({ email: request.body.email }, ENVIRONMENT.JWT_SECRET_KEY)
 
-        // Store pending verification data
         await sendVerificationEmail(
-            { 
-                email: request.body.email, 
-                name: request.body.name, 
+            {
+                email: request.body.email,
+                name: request.body.name,
                 redirect_url: `http://localhost:3000/api/users/verify?verify_token=${verification_token}`
             }
-        )   
-        
+        )
+
         response.send({
-            message: 'Registration initiated! Please check your email to verify your account.',
+            message: 'Received!!, Check your email for verification',
             ok: true
         })
-    } 
+    }
     async getAll(request, response) {
 
     }
+
     async verify(request, response, next) {
         try {
 
             //Necesitamos capturar el parametro de consulta verify_token
             const verification_token = request.query.verify_token
 
-            //Primero necesito verificar que el token lo emiti yo y que hay token
+            //1. Verify the token was the one you emitted & exists 
             if (!verification_token) {
                 response.status(400).send(
                     {
@@ -77,17 +81,23 @@ class UserController {
                         message: "Where is the verification token? 👻👻"
                     }
                 )
-                //Return to stop executing
+            
                 return
             }
-            //Verify intententara ver si la firma es correcta, en caso de no ser correcta emitira (throw) un error
+
+            //1. Verify the token
             const contenido = jwt.verify(verification_token, "clave_super_secreta123_nadie_la_conoce")
 
             console.log({ contenido })
+            //2. Search for the user by email in the DB 
+            //3. See if the user was previously verified
+            //4. If 3 fails, change the user from not-verificado to verified
             await userRepository.verifyUserEmail({email: contenido.email})
+
             response.send({
+                status: 200,
                 ok: true,
-                message: 'User validated successfully'
+                message: 'User successfully verified'
             })
             
             
@@ -98,35 +108,36 @@ class UserController {
 
     }
 
-    async login(request, response){
+    async login(request, response, next){
         try{
+        
             const {email, password} = request.body
 
             if(!email){
                 throw {status: 400, message: 'No email entered'}
             }
             if(!password){
-                throw {status: 400, message: 'No password entered'}
+                throw {status: 400, message: 'No password enetered'}
             }
             
-            // Find the user in the DB by email 
+            //PASO 1.1: Buscar al usuario en la DB por mail
             const user = await userRepository.findByEmail({email: email})
             if(!user){
                 throw {status: 404, message: 'User not found'}
             }
 
-            // Verify their email is valid
+            //PASO 1.2: Verify email
             if(!user.verified){
-                throw {status: 400, message: "Validate your email first"}
+                throw {status: 400, message: "Enter a valid email"}
             }
             
-            //Verify if the password entered by the user coincides with the pw for that emmail in the db 
+            //PASO 2: Verify if the password that the client passed matches the one in the DB
             const is_same_password = await bcrypt.compare(password, user.password)
             if(!is_same_password){
-                throw {status: 400, message: 'Invalid password'}
+                throw {status: 400, message: 'Incorrect password'}
             }
 
-            //Create a token with the non-sensitive user data (session)
+            //PASO 3: Crear un token con los datos no-sensibles del usuario (sesion)
             const authorization_token = jwt.sign({
                 name: user.name,
                 email: user.email,
@@ -135,8 +146,8 @@ class UserController {
             }, 
             ENVIRONMENT.JWT_SECRET_KEY
             )
-            // Responder with the token
-            response.send({
+            //PASO 4: Responder con el token
+            response.status(200).send({
                 ok: true,
                 status: 200,
                 message: 'User logged in',
@@ -149,29 +160,30 @@ class UserController {
             next(error)
         }
     }
-    // GET /api/users/resendmail-verification-mail
-    // body: {email}
-    // Debe re-enviar el mail de verificacion si no esta verificado
+    // GET /api/users/resend-verification-mail
+    // Resend the verification email if the user is not verified
+
     async resendVerificationEmail (request, response){
-         try{
+        try{
             const {email} = request.body
-            // Check if user already exists and is verified
+
+            //Search the DB for the user by email
             const user = await userRepository.findByEmail({email})
-            if(!user) {
+            //Check that the user exists
+            if(!user){
                 throw {
-                    status: 400,
-                    message: 'User not found'
+                    status: 404,
+                    message: 'Usuario no encontrado'
                 }
             }
 
             if(user.verified){
                 throw {
                     status: 400,
-                    message: 'The user is already verified'
+                    message: 'El usuario ya esta verificado'
                 }
             }
-            //const is_same_password
-            //Creamos un token de verificacion para generar la URL de verificacion
+            //Create a verification token to generate the verification URL 
             const verification_token = jwt.sign({ email: email }, ENVIRONMENT.JWT_SECRET_KEY)
             await sendVerificationEmail({
                 email, 
@@ -182,13 +194,26 @@ class UserController {
             //Si todo sale bien respondemos con codigo exitoso
             response.send({
                 ok: true,
-                message: 'Mail resent successfully',
+                message: 'Mail reenviado con exito',
                 status: 200
             })
             return
         }
         catch(error){
-           next(error)
+            
+            if(error.status){ 
+                response.status(error.status).send(
+                    {
+                        message: error.message, 
+                        ok: false
+                    }
+                )
+                return 
+            }
+            else{
+                console.log('Hubo un error', error)
+                response.status(500).send({message: 'Error interno del servidor', ok: false})
+            }
         }
     }
 

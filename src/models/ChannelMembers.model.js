@@ -22,5 +22,5 @@ const channelMembersSchema = new mongoose.Schema(
     }
 )
 
-const ChannelMembers = mongoose.model('channel_members', channelMembersSchema)
+const ChannelMembers = mongoose.model('Channel_members', channelMembersSchema)
 export default ChannelMembers

@@ -27,5 +27,5 @@ const channelMessagesSchema = new mongoose.Schema(
     }
 )
 
-const ChannelMessages = mongoose.model('channel_messages', channelMessagesSchema)
+const ChannelMessages = mongoose.model('Channel_messages', channelMessagesSchema)
 export default ChannelMessages

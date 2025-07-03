@@ -8,7 +8,7 @@ connectDB()
 
 import express from 'express'
 import usersRouter from "./routes/users.router.js";
-import workspace_router from "./routes/workspaces.router.js";
+import workspace_router from "./routes/workspace.router.js";
 import workspaceMembersRouter from "./routes/workspaceMembers.router.js";
 import channelRouter from "./routes/channel.router.js";
 import messageRouter from "./routes/messages.router.js";

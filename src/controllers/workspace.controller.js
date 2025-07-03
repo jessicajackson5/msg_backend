@@ -1,5 +1,5 @@
 import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js"
-import members_workspace_repository from "../repositories/workspaceMembers.repository.js"
+import workspace_members_repository from "../repositories/workspaceMembers.repository.js"
 import workspaces_repository from "../repositories/workspaces.repository.js"
 
 //Garbage storage?
@@ -14,7 +14,7 @@ class WorkspaceController {
             const {id} = request.user // ID of the user that made the request
 
             const workspace_created = await workspaces_repository.create({name, description, owner_id: id})
-            await members_workspace_repository.create({
+            await workspace_members_repository.create({
                 workspace_id: workspace_created._id,
                 user_id: id,
                 role: AVAILABLE_ROLES_WORKSPACE_MEMBERS.ADMIN
@@ -60,7 +60,7 @@ class WorkspaceController {
             response.status(200).json(
                 {
                     ok: true,
-                    message: 'Workspace eliminated successfully',
+                    message: 'Workspace deleted successfully',
                     status: 200,
                     data: {}
                 }
@@ -89,10 +89,10 @@ class WorkspaceController {
         };
     }
 
-    async getAllByMember (request, response){
+    async getAllbyMember (request, response){
         const {id} = request.user
         //Get a list of all the workspaces a member belongs to
-        const workspaces = await members_workspace_repository.getAllByUserId(id)
+        const workspaces = await workspace_members_repository.getAllbyUserID(id)
         response.json({
             ok: true, 
             status: 200,
@@ -104,5 +104,5 @@ class WorkspaceController {
     }
 }
 
-const workspaces_controller = new WorkspaceController
-export default workspaces_controller
+const workspace_controller = new WorkspaceController
+export default workspace_controller
