@@ -14,12 +14,12 @@ class WorkspacesRepository {
             console.error("An error occurred");
         }
     async deleteWorkspaceFromOwner (owner_id, workspace_id) {
-        //Eliminar el workspace solo si el 
+        //Delete the workspace only if the owner is the one that made the request 
         const result = await Workspaces.findOneAndDelete({owner_id, _id: workspace_id})
         console.log(result)
         // If it returns null the workspace was not eliminated            
         if(!result){
-            throw {status: 404, message: 'El workspace a eliminar no existe'}
+            throw {status: 404, message: 'The workspace to eliminate does not exist'}
         }
     }
     async deleteById(workspace_id){

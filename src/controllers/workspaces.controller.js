@@ -1,6 +1,6 @@
 import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js"
 import members_workspace_repository from "../repositories/workspaceMembers.repository.js"
-import workspaces_repository from "../repositories/workspace.repository.js"
+import workspaces_repository from "../repositories/workspaces.repository.js"
 
 //Garbage storage?
 //We do not need to manipulate memory, JS does it for us. 
@@ -104,5 +104,5 @@ class WorkspaceController {
     }
 }
 
-const workspace_controller = new WorkspaceController
-export default workspace_controller
+const workspaces_controller = new WorkspaceController
+export default workspaces_controller

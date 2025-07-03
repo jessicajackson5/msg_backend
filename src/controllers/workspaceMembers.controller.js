@@ -1,5 +1,5 @@
 import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js"
-import workspaces_repository from "../repositories/workspace.repository.js"
+import workspaces_repository from "../repositories/workspaces.repository.js"
 import usersRouter from "../routes/users.router.js"
 
 class workspaceMembersController {

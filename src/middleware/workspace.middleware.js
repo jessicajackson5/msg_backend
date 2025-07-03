@@ -2,7 +2,7 @@
 // client belongs to the workspace
 
 import members_workspace_repository from "../repositories/workspaceMembers.repository.js"
-import workspaces_repository from "../repositories/workspace.repository.js"
+import workspaces_repository from "../repositories/workspaces.repository.js"
 
 const workspaceMiddleware = async (req, res, next) => {
     const { workspaceId } = req.params;

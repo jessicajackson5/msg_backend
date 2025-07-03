@@ -1,6 +1,6 @@
 import express from 'express'
 import authorizationMiddleware from '../middleware/auth.middleware.js'
-import workspace_controller from '../controllers/workspaces.controller.js'
+import workspaces_controller from '../controllers/workspaces.controller.js'
 
 
 const workspaces_router = express.Router()
@@ -8,19 +8,19 @@ const workspaces_router = express.Router()
 workspaces_router.post(
     '/',
     authorizationMiddleware,
-    workspace_controller.create
+    workspaces_controller.create
 )
 
 workspaces_router.get(
     '/',
     authorizationMiddleware,
-    workspace_controller.getAllByMember
+    workspaces_controller.getAllByMember
 )
 
-workspace_router.delete(
+workspaces_router.delete(
     '/:workspace_id',
     authorizationMiddleware,
-    workspace_controller.delete
+    workspaces_controller.delete
 )
 
-export default workspace_router
+export default workspaces_router

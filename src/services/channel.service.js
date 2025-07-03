@@ -1,5 +1,5 @@
 import channelRepository from "../repositories/channel.repository.js";
-import workspaces_repository from "../repositories/workspace.repository.js";
+import workspaces_repository from "../repositories/workspaces.repository.js";
 class ChannelService {
     async create(workspaceId, name) {
         try {
