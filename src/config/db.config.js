@@ -7,25 +7,15 @@ export const connectDB = async () => {
         const dbUrl = ENVIRONMENT.DB_URL || 'mongodb://localhost:27017';
         const dbName = ENVIRONMENT.DB_NAME || 'msg_app';
         
-        // If it's a MongoDB Atlas URL (contains mongodb.net), use it as is
-        if (dbUrl.includes('mongodb.net')) {
-            await mongoose.connect(dbUrl, {
-                retryWrites: true,
-                w: 'majority',
-                maxPoolSize: 10,
-                serverSelectionTimeoutMS: 5000,
-                socketTimeoutMS: 45000,
-            });
-        } else {
-            // Local MongoDB connection
-            await mongoose.connect(`${dbUrl}/${dbName}`, {
-                maxPoolSize: 10,
-                serverSelectionTimeoutMS: 5000,
-                socketTimeoutMS: 45000,
-            });
-        }
+        // Local MongoDB connection
+        await mongoose.connect(`${dbUrl}/${dbName}`, {
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        })
         
         console.log('Connection exitosa')
+        console.log('DB URL being used:', ENVIRONMENT.DB_URL || 'mongodb://localhost:27017')
     }
     catch(error){
         console.log('Error connecting to DB', error)

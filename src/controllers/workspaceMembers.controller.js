@@ -17,7 +17,7 @@ class workspaceMembersController {
             }
             // Ensure the member is not already in the workspace (avoid duplicates)
             const members = await members_workspace_repository.getAllbyWorkspaceID(workspace_id)
-            if(members.find(member => member._id ===user_found._id)){
+            if(members.find(member => member._id===user_found._id)){
                 throw {
                     status: 400,
                     message: 'The user is already a member of this workspace'
@@ -53,7 +53,7 @@ class workspaceMembersController {
                 {
                     ok: true,
                     status: 201,
-                    message: 'Miembro añadido exitosamente',
+                    message: 'Member added successfully',
                     data: {}
                 }
             )

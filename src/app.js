@@ -8,7 +8,7 @@ connectDB()
 
 import express from 'express'
 import usersRouter from "./routes/users.router.js";
-import workspace_router from "./routes/workspace.router.js";
+import workspace_router from "./routes/workspaces.router.js";
 import workspaceMembersRouter from "./routes/workspaceMembers.router.js";
 import channelRouter from "./routes/channel.router.js";
 import messageRouter from "./routes/messages.router.js";
@@ -37,7 +37,7 @@ app.get('/ping', (request, response) => {
 
 // API routes
 app.use('/api/users', usersRouter)
-app.use('/api/workspace', workspace_router)
+app.use('/api/workspaces', workspace_router)
 app.use('/api/members', workspaceMembersRouter)
 app.use('/api/channels', channelRouter)
 app.use('/api/messages', messageRouter)

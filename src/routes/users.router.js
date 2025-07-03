@@ -1,5 +1,5 @@
 import express from "express";
-import userController from "../controllers/user.controller.js";
+import userController from "../controllers/users.controller.js";
 
 const usersRouter = express.Router()
 
@@ -11,6 +11,6 @@ usersRouter.post('/register', userController.register)
 usersRouter.post('/login', userController.login)
 usersRouter.get('/verify', userController.verify)
 usersRouter.get('/resend-verification-mail', userController.resendVerificationEmail)
-usersRouter.post('/manual-verify', userController.manualVerify) // For testing purposes
+// usersRouter.post('/manual-verify', userController.manualVerify) // For testing purposes
 
 export default usersRouter

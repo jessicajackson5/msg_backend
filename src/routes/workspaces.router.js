@@ -1,18 +1,17 @@
-
 import express from 'express'
 import authorizationMiddleware from '../middleware/auth.middleware.js'
-import workspace_controller from '../controllers/workspace.controller.js'
+import workspace_controller from '../controllers/workspaces.controller.js'
 
 
-const workspace_router = express.Router()
+const workspaces_router = express.Router()
 
-workspace_router.post(
+workspaces_router.post(
     '/',
     authorizationMiddleware,
     workspace_controller.create
 )
 
-workspace_router.get(
+workspaces_router.get(
     '/',
     authorizationMiddleware,
     workspace_controller.getAllByMember
