@@ -6,7 +6,7 @@ const workspaceMiddleware = async (req, res, next) => {
   const userId = req.user.id;
 
   try {
-    const workspace = await workspaces_repository.getByID(workspaceId);
+    const workspace = await workspaces_repository.getById(workspaceId);
     if (!workspace) {
       throw { status: 404, message: "Workspace not found" };
     }
