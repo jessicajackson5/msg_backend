@@ -14,7 +14,7 @@ import errorMiddleware from "./middleware/error.middleware.js";
 
 const allowedOrigins = [
   'http://localhost:5173', // local dev
-  'https://msg-frontend-tawny.vercel.app/', // my deployed frontend
+  'https://msg-frontend-tawny.vercel.app', // my deployed frontend
 ];
 
 const app = express()
