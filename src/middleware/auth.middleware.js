@@ -22,7 +22,7 @@ const authorizationMiddleware = (request, response, next) => {
     } else {
       response.status(500).json({
         ok: false,
-        message: "Error interno del servidor",
+        message: "Internal server error",
         status: 500,
       })
     }
