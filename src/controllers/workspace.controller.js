@@ -90,17 +90,29 @@ class WorkspaceController {
     }
 
     async getAllbyMember (request, response){
-        const {id} = request.user
-        //Get a list of all the workspaces a member belongs to
-        const workspaces = await workspace_members_repository.getAllbyUserID(id)
-        response.json({
-            ok: true, 
-            status: 200,
-            message:'List of workspaces',
-            data: {
-                workspaces: workspaces
-            }
-        })
+        try {
+            const {id} = request.user
+            console.log('[getAllbyMember] user id:', id)
+            //Get a list of all the workspaces a member belongs to
+            const workspaces = await workspace_members_repository.getAllbyUserID(id)
+            console.log('[getAllbyMember] workspaces found:', workspaces)
+            response.json({
+                ok: true, 
+                status: 200,
+                message:'List of workspaces',
+                data: {
+                    workspaces: workspaces
+                }
+            })
+        } catch (error) {
+            console.error('[getAllbyMember] error:', error)
+            response.status(500).json({
+                ok: false,
+                status: 500,
+                message: 'Internal server error',
+                data: {}
+            })
+        }
     }
 }
 

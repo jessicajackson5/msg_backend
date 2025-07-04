@@ -26,7 +26,7 @@ messageRouter.get(
     '/:workspace_id/:channel_id', 
     workspaceMiddleware,
     channelMiddleware,
-    messages_controller.getAllByChannel
+    messages_controller.getAllbyChannel
 )
 
 export default messageRouter

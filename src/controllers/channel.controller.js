@@ -1,10 +1,14 @@
 import channel_service from "../services/channel.service.js";
 
 class ChannelController {
+   
     async create(request, response) {
+        console.log('Create channel')
         try {
             const { workspace_id } = request.params
+            console.log('request.body', request.body)
             const { name } = request.body
+            
             const { channels } = await channel_service.create(workspace_id, name)
             response
                 .status(201)
@@ -42,10 +46,10 @@ class ChannelController {
         }
 
     }
-    async getAllByWorkspaceId (request, response){
+    async getAllbyWorkspaceID (request, response){
         try{
             const { workspace_id } = request.params
-            const channels = await channel_service.getAllByWorkspaceId(workspace_id)
+            const channels = await channel_service.getAllbyWorkspaceID(workspace_id)
             response.status(200).json(
                 {
                     ok: true,

@@ -28,5 +28,5 @@ const userSchema = new mongoose.Schema(
     }
 )
 //Defino que la coleccion de users estara atada a esta validacion
-const User = mongoose.model('Users', userSchema)
+const User = mongoose.model('Users', userSchema, 'Users')
 export default User

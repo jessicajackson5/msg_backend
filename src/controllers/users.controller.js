@@ -39,29 +39,39 @@ class UserController {
         //Hash the password
         const password_hashed = await bcrypt.hash(request.body.password, 12)
 
-
-        //Save the user in the DB
-        await userRepository.create({
-            name: request.body.name,
-            password: password_hashed,
-            email: request.body.email
-        })
-
-        /* Emit a token with signature */
-        const verification_token = jwt.sign({ email: request.body.email }, ENVIRONMENT.JWT_SECRET_KEY)
-
-        await sendVerificationEmail(
-            {
-                email: request.body.email,
+        try {
+            console.log('[UserController] Attempting to create user:', request.body.email)
+            //Save the user in the DB
+            const savedUser = await userRepository.create({
                 name: request.body.name,
-                redirect_url: `http://localhost:3000/api/users/verify?verify_token=${verification_token}`
-            }
-        )
+                password: password_hashed,
+                email: request.body.email
+            })
+            console.log('[UserController] User created successfully:', savedUser)
 
-        response.send({
-            message: 'Received!!, Check your email for verification',
-            ok: true
-        })
+            /* Emit a token with signature */
+            const verification_token = jwt.sign({ email: request.body.email }, ENVIRONMENT.JWT_SECRET_KEY)
+
+            await sendVerificationEmail(
+                {
+                    email: request.body.email,
+                    name: request.body.name,
+                    redirect_url: `http://localhost:3000/api/users/verify?verify_token=${verification_token}`
+                }
+            )
+
+            response.send({
+                message: 'Received!!, Check your email for verification',
+                ok: true
+            })
+        } catch (error) {
+            console.error('[UserController] Error during user registration:', error)
+            response.status(500).send({
+                message: 'Error registering user',
+                ok: false,
+                error: error.message || error
+            })
+        }
     }
     async getAll(request, response) {
 
@@ -81,7 +91,6 @@ class UserController {
                         message: "Where is the verification token? 👻👻"
                     }
                 )
-            
                 return
             }
 
@@ -105,7 +114,6 @@ class UserController {
         catch (error) {
             next(error)
         }
-
     }
 
     async login(request, response, next){
@@ -120,24 +128,24 @@ class UserController {
                 throw {status: 400, message: 'No password enetered'}
             }
             
-            //PASO 1.1: Buscar al usuario en la DB por mail
+            //1.1: Search for the user in the DB by email
             const user = await userRepository.findByEmail({email: email})
             if(!user){
                 throw {status: 404, message: 'User not found'}
             }
 
-            //PASO 1.2: Verify email
+            //1.2: Verify email
             if(!user.verified){
-                throw {status: 400, message: "Enter a valid email"}
+                throw {status: 400, message: "Validate your email first"}
             }
             
-            //PASO 2: Verify if the password that the client passed matches the one in the DB
+            //2: Verify if the password that the client passed matches the one in the DB
             const is_same_password = await bcrypt.compare(password, user.password)
             if(!is_same_password){
                 throw {status: 400, message: 'Incorrect password'}
             }
 
-            //PASO 3: Crear un token con los datos no-sensibles del usuario (sesion)
+            //3: Create a token with non-sensitive user data (sesion)
             const authorization_token = jwt.sign({
                 name: user.name,
                 email: user.email,
@@ -146,7 +154,7 @@ class UserController {
             }, 
             ENVIRONMENT.JWT_SECRET_KEY
             )
-            //PASO 4: Responder con el token
+            //4: Responder with the token
             response.status(200).send({
                 ok: true,
                 status: 200,
@@ -173,14 +181,14 @@ class UserController {
             if(!user){
                 throw {
                     status: 404,
-                    message: 'Usuario no encontrado'
+                    message: 'Usar not found'
                 }
             }
 
             if(user.verified){
                 throw {
                     status: 400,
-                    message: 'El usuario ya esta verificado'
+                    message: 'User is already verified'
                 }
             }
             //Create a verification token to generate the verification URL 
@@ -191,10 +199,10 @@ class UserController {
                 redirect_url:  `http://localhost:3000/api/users/verify?verify_token=${verification_token}`
             })
 
-            //Si todo sale bien respondemos con codigo exitoso
+            //If everything goes well resond with the success code
             response.send({
                 ok: true,
-                message: 'Mail reenviado con exito',
+                message: 'Mail resent successfully',
                 status: 200
             })
             return
@@ -211,8 +219,8 @@ class UserController {
                 return 
             }
             else{
-                console.log('Hubo un error', error)
-                response.status(500).send({message: 'Error interno del servidor', ok: false})
+                console.log('There was an error', error)
+                response.status(500).send({message: 'Internal server error', ok: false})
             }
         }
     }

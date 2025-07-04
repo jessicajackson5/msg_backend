@@ -2,9 +2,16 @@ import User from "../models/User.model.js";
 
 class UserRepository {
     async create({name, password, email}){
-        const user = new User({name, password, email})
-        console.log(user)
-        await user.save()
+        try {
+            const user = new User({name, password, email})
+            console.log('[UserRepository] Creating user:', user)
+            const savedUser = await user.save()
+            console.log('[UserRepository] User saved successfully:', savedUser)
+            return savedUser
+        } catch (error) {
+            console.error('[UserRepository] Error saving user:', error)
+            throw error
+        }
     }
     async getAll(){
         const users = await User.find()

@@ -1,5 +1,3 @@
-
-// src/repositories/ChannelRepository.js
 import Channel from '../models/Channel.model.js';
 
 class ChannelRepository {
@@ -34,7 +32,7 @@ class ChannelRepository {
         }
     }
 
-    async getAllByWorkspace(workspaceId){
+    async getAllbyWorkspace(workspaceId){
         try {
             const channels = await Channel.find({workspace_id: workspaceId});
             return channels;

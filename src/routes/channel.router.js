@@ -6,6 +6,6 @@ import workspaceMiddleware from '../middleware/workspace.middleware.js'
 const channelRouter = express.Router()
 
 channelRouter.post('/:workspace_id', authorizationMiddleware, workspaceMiddleware, channel_controller.create)
-channelRouter.get('/:workspace_id', authorizationMiddleware, workspaceMiddleware, channel_controller.getAllByWorkspaceId)
+channelRouter.get('/:workspace_id', authorizationMiddleware, workspaceMiddleware, channel_controller.getAllbyWorkspaceID)
 
 export default channelRouter

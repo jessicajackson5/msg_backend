@@ -1,15 +1,16 @@
 import mongoose from "mongoose";
 import { AVAILABLE_ROLES_WORKSPACE_MEMBERS } from "../dictionaries/availableRoles.dictionary.js";
+
 const workspaceMembersSchema = new mongoose.Schema(
     {
         workspace_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Workspace',
+            ref: 'Workspaces',
             required: true,
         },
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Users',
             required: true,
         },
         role: {
@@ -25,5 +26,5 @@ const workspaceMembersSchema = new mongoose.Schema(
     }
 )
 
-const WorkspaceMembers = mongoose.model('Workspace_members', workspaceMembersSchema)
+const WorkspaceMembers = mongoose.model('Workspace_members', workspaceMembersSchema, 'Workspace_members')
 export default WorkspaceMembers

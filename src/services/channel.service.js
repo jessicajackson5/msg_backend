@@ -1,4 +1,4 @@
-import channelRepository from "../repositories/channel.repository.js";
+import channel_repository from "../repositories/channel.repository.js";
 import workspaces_repository from "../repositories/workspaces.repository.js";
 class ChannelService {
     async create(workspaceId, name) {
@@ -11,13 +11,10 @@ class ChannelService {
             if (existingChannel) {
                 throw { status: 400, message: 'The name of the channel already exists' };
             }
-            const workspace = await workspaces_repository.getById(workspaceId);
-            if (!workspace) {
-                throw { status: 404, message: 'Workspace not found' };
-            }
+       
             let default_is_private = false;
             await channel_repository.create(workspaceId, name, default_is_private);
-            const channels = await channel_repository.getAllByWorkspaceId(workspaceId);
+            const channels = await channel_repository.getAllbyWorkspace(workspaceId);
             return {
                 channels
             };
@@ -25,8 +22,8 @@ class ChannelService {
             throw error;
         }
     }
-    async getAllByWorkspaceId(workspaceId){
-        return await channel_repository.getAllByWorkspaceId(workspaceId)
+    async getAllbyWorkspaceID(workspaceId){
+        return await channel_repository.getAllbyWorkspace(workspaceId)
     }
 }
 const channel_service = new ChannelService();
