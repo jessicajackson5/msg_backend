@@ -12,9 +12,16 @@ import channelRouter from "./routes/channel.router.js";
 import messageRouter from "./routes/messages.router.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 
+const allowedOrigins = [
+  'http://localhost:5173', // local dev
+  'https://msg-frontend-tawny.vercel.app/', // my deployed frontend
+];
 
 const app = express()
-app.use(cors())
+// app.use(cors())
+app.use(cors({
+  origin: allowedOrigins,
+}));
 app.use(express.json())
 
 app.get('/', (request, response) => {
