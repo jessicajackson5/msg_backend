@@ -20,7 +20,7 @@ class UserRepository {
         
         if(userFound.verified){
             //throw is used for my own
-            throw { status:400, message:"Usar already validated" }
+            throw { status:400, message:"User already validated" }
         }
         else{
             const result = await User.findByIdAndUpdate(
@@ -34,8 +34,7 @@ class UserRepository {
                     runValidators: true,
                     new: true //When this executes the return is updated
                 }
-            )
-            
+            ) 
         }
     }
     
