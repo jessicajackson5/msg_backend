@@ -51,7 +51,7 @@ class UserController {
 
             /* Emit a token with signature */
             const verification_token = jwt.sign({ email: request.body.email }, ENVIRONMENT.JWT_SECRET_KEY)
-
+            console.log("Environment URL:", ENVIRONMENT.URL_API)
             await sendVerificationEmail(
                 {
                     email: request.body.email,
