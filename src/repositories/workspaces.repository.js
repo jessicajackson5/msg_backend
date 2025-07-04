@@ -10,25 +10,22 @@ class WorkspacesRepository {
             await workspace.save()
             return workspace
         }
-        catch(error){
-            console.error("An error occurred");
-        }
-    async deleteWorkspaceFromOwner (owner_id, workspace_id) {
-        //Delete the workspace only if the owner is the one that made the request 
+     async deleteWorkspaceFromOwner (owner_id, workspace_id) {
+
+        //Only delete the workspace if the owner_idis the received as a parameter
         const result = await Workspaces.findOneAndDelete({owner_id, _id: workspace_id})
-        console.log(result)
-        // If it returns null the workspace was not eliminated            
+        //If the result is null, the workspace was not eliminated
         if(!result){
-            throw {status: 404, message: 'The workspace to eliminate does not exist'}
+            throw {status: 404, message: 'The workspace was not found'}
         }
     }
-    async deleteByID(workspace_id){
+    async deleteById(workspace_id){
         return await Workspaces.findOneAndDelete({_id: workspace_id})
     }
-    async getByID (workspace_id){
+
+    async getById (workspace_id){
         return await Workspaces.findById(workspace_id)
     }
 }
-
-const workspaces_repository = new WorkspacesRepository()
-export default workspaces_repository
+const workspaces_repository = new WorkspacesRepository();
+export default workspaces_repository;

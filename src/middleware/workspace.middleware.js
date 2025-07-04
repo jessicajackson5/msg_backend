@@ -34,7 +34,7 @@ const workspaceMiddleware = async (req, res, next) => {
       console.log(error);
       res
         .status(500)
-        .send({ message: "Error interno del servidor", ok: false });
+        .send({ message: "Internal server error", ok: false });
     }
   }
 };

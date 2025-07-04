@@ -19,13 +19,13 @@ class ChannelService {
                 channels
             };
         } catch (error) {
-            throw error;
+            throw error
         }
     }
     async getAllbyWorkspaceID(workspaceId){
         return await channel_repository.getAllbyWorkspace(workspaceId)
     }
 }
-const channel_service = new ChannelService();
-export default channel_service;
+const channel_service = new ChannelService()
+export default channel_service
 

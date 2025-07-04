@@ -11,10 +11,10 @@ const errorMiddleware = (error, request, response, next) => {
         return
     }
     else {
-        console.log('Hubo un error', error)
+        console.log('There was an error', error)
         response.status(500).json(
             {
-                message: 'Error interno del servidor',
+                message: 'Internal server error',
                 ok: false
             }
         )

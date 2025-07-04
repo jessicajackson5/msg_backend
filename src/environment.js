@@ -1,12 +1,5 @@
-// Como el type de nuestro proyecto en package.json es commonjs, no podemos usar import/export - usamos dotenv
-// const dotenv = require('dotenv')
-
-// Como el type de nuestro proyecto es module, si podemos usar import/export
 import dotenv from 'dotenv' // import default
-// import {config} from 'dotenv' // import normal and specifically bring the method config
 
-// Esto carga las variables de entorno en la variable process.env
-// require above is a native function in nodejs that allow you to import modules, JSON & files
 dotenv.config()
 
 export const ENVIRONMENT ={

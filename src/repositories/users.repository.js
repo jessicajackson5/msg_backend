@@ -2,16 +2,8 @@ import User from "../models/User.model.js";
 
 class UserRepository {
     async create({name, password, email}){
-        try {
             const user = new User({name, password, email})
-            console.log('[UserRepository] Creating user:', user)
-            const savedUser = await user.save()
-            console.log('[UserRepository] User saved successfully:', savedUser)
-            return savedUser
-        } catch (error) {
-            console.error('[UserRepository] Error saving user:', error)
-            throw error
-        }
+            await user.save()
     }
     async getAll(){
         const users = await User.find()
@@ -23,14 +15,12 @@ class UserRepository {
     }
     
     async verifyUserEmail ({email}){
-        //.find es un filter de js
-        //.findOne es un find de js
+        //.findOne us find from js
         const userFound = await this.findByEmail({email}) //filtramos a todos los usuarios que cumplan esta condicion
         
         if(userFound.verified){
-            //throw lo uso para lanzar mi propio error
-            throw { status:400, message:"User already verified" }
-            
+            //throw is used for my own
+            throw { status:400, message:"Usar already validated" }
         }
         else{
             const result = await User.findByIdAndUpdate(
@@ -42,7 +32,7 @@ class UserRepository {
                 },
                 {
                     runValidators: true,
-                    new: true // When the update is executed, update the return value.
+                    new: true //When this executes the return is updated
                 }
             )
             

@@ -1,24 +1,21 @@
 import mongoose from "mongoose";
 
-// Colleccion: channel_messages, Atributos: member_channel_id, chanel_id, contenido, created_at
-
 const channelMessagesSchema = new mongoose.Schema(
-    /* objeto de configuracion/definicion del esquema */
     {
-
         channel_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Channel',
+            ref: 'Channels',
             required: true
             },
         user_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Users',
             required: true
             },
         content: {
             type: String,
-            default: ''
+            default: '',
+            required: true,
             },
         created_at: {
             type: Date,

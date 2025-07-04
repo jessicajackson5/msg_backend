@@ -3,7 +3,7 @@ import workspace_members_repository from "../repositories/workspaceMembers.repos
 import userRepository from "../repositories/users.repository.js"
 import workspaces_repository from "../repositories/workspaces.repository.js"
 
-class MembersWorkspaceController {
+class WorkspaceMembersController {
     async add(request, response) {
         try {
             //Add a new member
@@ -38,7 +38,7 @@ class MembersWorkspaceController {
             }
 
             // Check if the member already exists, and do not add them again
-            const members = await members_workspace_repository.getAllByWorkspaceId(workspace_id)
+            const members = await workspace_members_repository.getAllbyWorkspaceID(workspace_id)
 
             if(members.find(member => {
                 return member.user_id.equals(user_found._id)
@@ -68,7 +68,7 @@ class MembersWorkspaceController {
                 }
             }
 
-            await members_workspace_repository.create({
+            await workspace_members_repository.create({
                 user_id: user_found._id,
                 workspace_id: workspace_id,
                 role: role
@@ -107,5 +107,5 @@ class MembersWorkspaceController {
     }
 }
 
-const members_workspace_controller = new MembersWorkspaceController()
-export default members_workspace_controller
+const workspace_members_controller = new WorkspaceMembersController()
+export default workspace_members_controller
