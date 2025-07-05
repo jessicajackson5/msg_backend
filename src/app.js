@@ -13,12 +13,15 @@ import messageRouter from "./routes/messages.router.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 
 const allowedOrigins = [
-  'http://localhost:5173', // local dev
+  'http://localhost:3000', // local dev
+  'http://localhost:5173',
   'https://msg-frontend-tawny.vercel.app', // my deployed frontend
+  'https://msg-backend-seven.vercel.app'
 ];
 
 const app = express()
 // app.use(cors())
+console.log(allowedOrigins)
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
