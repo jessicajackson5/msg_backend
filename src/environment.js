@@ -12,5 +12,6 @@ export const ENVIRONMENT ={
     GMAIL_PASSWORD: process.env.GMAIL_PASSWORD,
     JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
     DB_MONGO_PASSWORD: process.env.DB_MONGO_PASSWORD,
-    URL_API: process.env.URL_API
+    URL_API: process.env.URL_API,
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173'
 }
